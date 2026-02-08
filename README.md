@@ -1,17 +1,13 @@
 # test-fixture-gen
 
-Generate realistic test fixture data from JSON Schema files.
-
-## Prerequisites
-
-- Python 3.10+
-- No external dependencies
+Generates realistic test fixtures from JSON Schema definitions with smart field detection.
 
 ## Quick Start
 
 ```bash
-python3 scripts/run.py schema.json
+echo '{"type":"object","properties":{"name":{"type":"string"},"age":{"type":"integer"}}}' | ./scripts/run.sh
 ```
 
-See [references/usage-guide.md](references/usage-guide.md) for detailed usage.
-See [references/api.md](references/api.md) for complete documentation.
+## Full Documentation
+
+See [SKILL.md](SKILL.md).

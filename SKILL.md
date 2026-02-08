@@ -1,6 +1,6 @@
 ---
 name: test-fixture-gen
-description: Generate realistic test fixture data from JSON Schema files with deterministic seeded output.
+description: Generates realistic test fixtures from JSON Schema definitions with smart field detection.
 version: 0.1.0
 license: Apache-2.0
 ---
@@ -9,20 +9,60 @@ license: Apache-2.0
 
 ## Purpose
 
-Generates arrays of realistic test objects from a JSON Schema definition. Handles nested objects, arrays, enums, optional fields, and common string formats. Output is deterministic given a seed value.
+Generate realistic sample data for testing from JSON Schema definitions. Understands property names (email, name, phone, url) and schema formats to produce contextually appropriate values instead of random gibberish.
 
 ## Quick Start
 
 ```bash
-python3 scripts/run.py --count 5 --seed 42 schema.json
+$ echo '{"type":"object","properties":{"name":{"type":"string"},"age":{"type":"integer"}}}' | ./scripts/run.sh
+{
+  "name": "Alice Smith",
+  "age": 42
+}
 ```
 
-## Reference Index
+## Usage Examples
 
-- [references/api.md](references/api.md) — Complete CLI flags, exit codes, and supported schema features
-- [references/usage-guide.md](references/usage-guide.md) — Step-by-step walkthrough from basic to advanced
-- [references/examples.md](references/examples.md) — Copy-paste examples for common schemas
+### Multiple Fixtures
 
-## Implementation
+```bash
+$ echo '{"type":"object","properties":{"id":{"type":"integer"},"email":{"type":"string","format":"email"}}}' | ./scripts/run.sh --count 3
+```
 
-See `scripts/run.py` — a single Python script with no external dependencies.
+### Reproducible Output
+
+```bash
+$ echo '{"type":"object","properties":{"x":{"type":"integer"}}}' | ./scripts/run.sh --seed 42
+```
+
+### Array Schema
+
+```bash
+$ echo '{"type":"array","items":{"type":"string"},"minItems":3}' | ./scripts/run.sh
+```
+
+### From File
+
+```bash
+$ ./scripts/run.sh schema.json --count 10 --seed 123
+```
+
+## Options Reference
+
+| Flag        | Default | Description                          |
+|-------------|---------|--------------------------------------|
+| `--count N` | 1       | Number of fixtures to generate       |
+| `--seed N`  | random  | Random seed for reproducibility      |
+| `--compact` | false   | Compact JSON output                  |
+| `--help`    |         | Show usage                           |
+
+## Error Handling
+
+| Exit Code | Meaning            |
+|-----------|--------------------|
+| 0         | Success            |
+| 1         | Usage/input error  |
+
+## Validation
+
+Run `scripts/test.sh` to verify correctness (7 assertions).
